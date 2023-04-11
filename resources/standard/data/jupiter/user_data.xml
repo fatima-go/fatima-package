@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gateway_user>
+    <user id="admin" passwd="admin" role="OPERATOR" />
+</gateway_user>

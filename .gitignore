@@ -1,0 +1,5 @@
+*.swp
+.DS_Store
+.idea
+go.sum
+cmd/build_fatima/build_fatima

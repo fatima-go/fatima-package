@@ -1,0 +1,23 @@
+---
+# this is fatima-package.yaml sample
+# group (group id, group name)
+# process list
+# column : gid, name, loglevel, path, startmode
+# - gid : group id
+# - startmode : default 0(always started by juno), 1(not started by juno), 2(by HA), 3(by PS)
+group:
+  - {id: 1, name: OPM}
+  - {id: 2, name: ENG}
+  - {id: 3, name: DB}
+  - {id: 4, name: SVC}
+  - {id: 5, name: IF}
+process: # gid, name, loglevel, path, startmode
+  - gid       : 1
+    name      : jupiter
+    loglevel  : info
+  - gid       : 1
+    name      : juno
+    loglevel  : info
+  - gid       : 1
+    name      : saturn
+    loglevel  : info

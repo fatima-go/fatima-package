@@ -1,0 +1,14 @@
+{
+    "alarm": {
+        "active": false,
+        "url": "https://hooks.slack.com/services/MY_INCOMING_URI_PATH"
+    },
+    "event": {
+        "active": false,
+        "url": "https://hooks.slack.com/services/MY_INCOMING_URI_PATH"
+    },
+    "monitor": {
+        "active": false,
+        "url": "https://hooks.slack.com/services/MY_INCOMING_URI_PATH"
+    }
+}
