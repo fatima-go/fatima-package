@@ -26,26 +26,28 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/fatima-go/fatima-package/util"
 	"github.com/gosuri/uiprogress"
 	"os"
 	"path/filepath"
 	"sync"
-	"throosea/fatima-package/util"
 )
 
-var usage = `usage: %s -o linux -a amd64 install_dir
+var usage = `usage: %s -o linux -a amd64 -t my_personal_access_token install_dir
 
 build fatima package
 
 positional arguments:
   -o os        target os. e.g) linux darwin
   -a arch      target arch. e.g) amd64 arm64
+  -t token      github.com personal access token
   install_dir	compress fatima-package file saving directory
 `
 
 var (
 	targetOs   = flag.String("o", "", "target os. e.g) linux darwin")
 	targetArch = flag.String("a", "", "target arch. e.g) amd64 arm64")
+	pat        = flag.String("t", "", "github PAT")
 	outputDir  string
 )
 
@@ -59,6 +61,8 @@ type PackagingExecutor interface {
 	GetSteps() []string
 }
 
+var progressLogger = NewLogger()
+
 func main() {
 	validateGolang()
 
@@ -71,6 +75,8 @@ func main() {
 		flag.Usage()
 		return
 	}
+
+	defer progressLogger.Close()
 
 	outputDir = filepath.Join(flag.Args()[0])
 	err := util.EnsureDirectory(outputDir, false)

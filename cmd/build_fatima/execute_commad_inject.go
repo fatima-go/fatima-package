@@ -25,14 +25,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatima-go/fatima-package/util"
 	"gopkg.in/src-d/go-git.v4"
 	"net/url"
 	"path/filepath"
-	"throosea/fatima-package/util"
 )
 
 const (
-	githubUrlFatimaBinaries = "https://github.com/throosea/fatima-cmd.git"
+	githubUrlFatimaBinaries = "https://github.com/fatima-go/fatima-cmd.git"
 )
 
 func buildSourceUrl(urlpath, token string) string {
@@ -61,7 +61,7 @@ func (i InjectCommand) GetSteps() []string {
 }
 
 func (i InjectCommand) Execute(jobContext *JobContext, stepper StepIncrementer) error {
-	//fmt.Printf("cloning fatima-cmd...\n")
+	progressLogger.Log("[%s] cloning fatima-cmd : %s", jobContext.target, githubUrlFatimaBinaries)
 	stepper.Incr()
 	sourceUrl := buildSourceUrl(githubUrlFatimaBinaries, jobContext.sourceUrlToken)
 	workingDir, _ := jobContext.CreateDir("fatima-cmd")
@@ -74,7 +74,7 @@ func (i InjectCommand) Execute(jobContext *JobContext, stepper StepIncrementer) 
 		return fmt.Errorf("clone fail : %s", err.Error())
 	}
 
-	//fmt.Println("go module verifying...")
+	progressLogger.Log("[%s] go module verifying...", jobContext.target)
 	stepper.Incr()
 	err = util.GoModuleVerify(workingDir)
 	if err != nil {
@@ -88,8 +88,8 @@ func (i InjectCommand) Execute(jobContext *JobContext, stepper StepIncrementer) 
 		installBinDir,
 	)
 	stepper.Incr()
-	_, err = util.ExecuteCommand(workingDir, command)
-	//fmt.Printf("%s\n", out)
+	out, err := util.ExecuteCommand(workingDir, command)
+	progressLogger.Log("[%s] fatima-cmd build\n%s", jobContext.target, out)
 	if err != nil {
 		return fmt.Errorf("fail to execute command. build script return error : %s", err.Error())
 	}

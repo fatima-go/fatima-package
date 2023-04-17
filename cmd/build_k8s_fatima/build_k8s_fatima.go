@@ -26,10 +26,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/fatima-go/fatima-package/util"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"throosea/fatima-package/util"
 )
 
 var usage = `usage: %s install_dir

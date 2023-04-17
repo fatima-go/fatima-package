@@ -25,10 +25,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatima-go/fatima-package/util"
 	"gopkg.in/src-d/go-git.v4"
 	"net/url"
 	"path/filepath"
-	"throosea/fatima-package/util"
 )
 
 type OpmProcess struct {
@@ -47,9 +47,9 @@ func (o OpmProcess) BuildSourceUrl(token string) string {
 }
 
 var opmProccessList = []OpmProcess{
-	{Name: "jupiter", SourceUrl: "https://github.com/throosea/jupiter.git"},
-	{Name: "juno", SourceUrl: "https://github.com/throosea/juno.git"},
-	{Name: "saturn", SourceUrl: "https://github.com/throosea/saturn.git"},
+	{Name: "jupiter", SourceUrl: "https://github.com/fatima-go/jupiter.git"},
+	{Name: "juno", SourceUrl: "https://github.com/fatima-go/juno.git"},
+	{Name: "saturn", SourceUrl: "https://github.com/fatima-go/saturn.git"},
 }
 
 type InjectOPM struct {
@@ -82,10 +82,12 @@ func (i InjectOPM) Execute(jobContext *JobContext, stepper StepIncrementer) erro
 }
 
 func buildOpmProcess(target OpmProcess, jobContext *JobContext, stepper StepIncrementer) error {
-	//fmt.Printf("cloning %s...\n", target.Name)
 	stepper.Incr()
 	workingDir, _ := jobContext.CreateDir(target.Name)
 	sourceUrl := target.BuildSourceUrl(jobContext.sourceUrlToken)
+
+	progressLogger.Log("[%s] cloning opm : %s :: %s", jobContext.target, target.Name, sourceUrl)
+
 	_, err := git.PlainClone(workingDir, false, &git.CloneOptions{
 		URL:      sourceUrl,
 		Progress: nil,
@@ -95,8 +97,7 @@ func buildOpmProcess(target OpmProcess, jobContext *JobContext, stepper StepIncr
 		return fmt.Errorf("clone fail : %s", err.Error())
 	}
 
-	// go build -o /tmp/juno
-	//fmt.Println("go module verifying...")
+	progressLogger.Log("[%s] go module verifying : %s", jobContext.target, target.Name)
 	stepper.Incr()
 	err = util.GoModuleVerify(workingDir)
 	if err != nil {
@@ -111,8 +112,8 @@ func buildOpmProcess(target OpmProcess, jobContext *JobContext, stepper StepIncr
 	)
 
 	stepper.Incr()
-	_, err = util.ExecuteShell(workingDir, command)
-	//fmt.Printf("%s\n", out)
+	out, err := util.ExecuteShell(workingDir, command)
+	progressLogger.Log("[%s] opm %s build\n%s", jobContext.target, target.Name, out)
 	if err != nil {
 		return fmt.Errorf("building %s return error : %s", target.Name, err.Error())
 	}

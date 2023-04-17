@@ -54,6 +54,8 @@ func (i InjectPackingInfo) Execute(jobContext *JobContext, stepper StepIncrement
 		return fmt.Errorf("fail to marshal packing info : %s\n", err.Error())
 	}
 
+	progressLogger.Log("[%s] inject packing info\n%s", jobContext.target, string(b))
+
 	packingFilePath := filepath.Join(jobContext.packageFilesDir, packingFileName)
 	err = os.WriteFile(packingFilePath, b, 0644)
 	if err != nil {

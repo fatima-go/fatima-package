@@ -25,12 +25,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatima-go/fatima-package/util"
 	"github.com/gosuri/uiprogress"
 	"github.com/gosuri/uiprogress/util/strutil"
 	"os"
 	"path/filepath"
 	"strings"
-	"throosea/fatima-package/util"
 	"time"
 )
 
@@ -125,7 +125,7 @@ func createJobContext(target supportBuild) (*JobContext, error) {
 		return ctx, fmt.Errorf("fail to create temp dir : %s", err.Error())
 	}
 
-	ctx.sourceUrlToken = "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"
+	ctx.sourceUrlToken = *pat //"MUST_BE_PROVIDED_AS_ARG" // TODO
 	ctx.tempDir = tmpdir
 	ctx.packageFilesDir = filepath.Join(tmpdir, fatimaPackageDirName)
 	ctx.target = target

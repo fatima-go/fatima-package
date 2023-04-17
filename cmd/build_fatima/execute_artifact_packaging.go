@@ -25,9 +25,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatima-go/fatima-package/util"
 	"os"
 	"path/filepath"
-	"throosea/fatima-package/util"
 )
 
 type InjectPackagingArtifact struct {
@@ -46,17 +46,20 @@ func (i InjectPackagingArtifact) GetSteps() []string {
 }
 
 func (i InjectPackagingArtifact) Execute(jobContext *JobContext, stepper StepIncrementer) error {
+	progressLogger.Log("[%s] packaging artifact", jobContext.target)
 	stepper.Incr()
 	tarFile := jobContext.artifact + ".tar"
 	workingDir := filepath.Dir(jobContext.packageFilesDir)
 	command := fmt.Sprintf("tar cvf %s %s", tarFile, fatimaPackageDirName)
-	_, err := util.ExecuteShell(workingDir, command)
+	out, err := util.ExecuteShell(workingDir, command)
+	progressLogger.Log("[%s] tar...\n%s", jobContext.target, out)
 	//fmt.Printf("%s\n", out)
 	if err != nil {
 		return fmt.Errorf("packaging artifact fail. tar error : %s", err.Error())
 	}
 
 	//fmt.Printf("compress %s...\n", tarFile)
+	progressLogger.Log("[%s] compress %s", jobContext.target, tarFile)
 	stepper.Incr()
 	command = fmt.Sprintf("gzip %s", tarFile)
 	_, err = util.ExecuteShell(workingDir, command)
@@ -70,7 +73,7 @@ func (i InjectPackagingArtifact) Execute(jobContext *JobContext, stepper StepInc
 	oldLoc := filepath.Join(workingDir, jobContext.artifact)
 	newLoc := filepath.Join(jobContext.outputDir, jobContext.artifact)
 
-	//fmt.Printf("moving artifact to %s\n", newLoc)
+	progressLogger.Log("[%s] moving artifact to %s", jobContext.target, newLoc)
 	err = os.Rename(oldLoc, newLoc)
 	if err != nil {
 		return fmt.Errorf("fail to move artifact : %s", err.Error())
