@@ -28,6 +28,7 @@ import (
 	"github.com/fatima-go/fatima-package/util"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type InjectPackagingArtifact struct {
@@ -50,7 +51,8 @@ func (i InjectPackagingArtifact) Execute(jobContext *JobContext, stepper StepInc
 	stepper.Incr()
 	tarFile := jobContext.artifact + ".tar"
 	workingDir := filepath.Dir(jobContext.packageFilesDir)
-	command := fmt.Sprintf("tar cvf %s %s", tarFile, fatimaPackageDirName)
+	tarCmd := chooseTarCommand()
+	command := fmt.Sprintf("%s cvf %s %s", tarCmd, tarFile, fatimaPackageDirName)
 	out, err := util.ExecuteShell(workingDir, command)
 	progressLogger.Log("[%s] tar...\n%s", jobContext.target, out)
 	//fmt.Printf("%s\n", out)
@@ -82,4 +84,25 @@ func (i InjectPackagingArtifact) Execute(jobContext *JobContext, stepper StepInc
 	stepper.Incr()
 
 	return nil
+}
+
+const (
+	binGtar = "gtar"
+	binTar  = "COPYFILE_DISABLE=1 tar"
+)
+
+// chooseTarCommand gtar 가 있으면 해당 기능을 사용하고 없으면 COPYFILE_DISABLE =1 옵션의 tar 사용
+func chooseTarCommand() string {
+	out, err := util.ExecuteShell(".", "which "+binGtar)
+	if err != nil {
+		return binTar
+	}
+
+	if filepath.Base(strings.TrimSpace(out)) == binGtar {
+		return binGtar
+	}
+
+	// gtar 가 있다면 그걸 쓰고
+	// 없다면 tar 를 쓰는데 COPYFILE_DISABLE=1 옵션과 같이 쓰자..
+	return binTar
 }
