@@ -91,8 +91,7 @@ const (
 	binTar  = "COPYFILE_DISABLE=1 tar"
 )
 
-// chooseTarCommand gtar 가 있다면 그걸 쓰고
-// 없다면 tar 를 쓰는데 COPYFILE_DISABLE=1 옵션과 같이 쓰자..
+// chooseTarCommand gtar 가 있으면 해당 기능을 사용하고 없으면 COPYFILE_DISABLE =1 옵션의 tar 사용
 func chooseTarCommand() string {
 	out, err := util.ExecuteShell(".", "which "+binGtar)
 	if err != nil {
