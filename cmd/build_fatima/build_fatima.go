@@ -33,21 +33,24 @@ import (
 	"sync"
 )
 
-var usage = `usage: %s -o linux -a amd64 -t my_personal_access_token install_dir
+var usage = `usage: %s -o linux -a amd64 [-t my_personal_access_token] install_dir
 
 build fatima package
 
 positional arguments:
   -o os        target os. e.g) linux darwin
   -a arch      target arch. e.g) amd64 arm64
-  -t token      github.com personal access token
-  install_dir	compress fatima-package file saving directory
+  -t token     github.com personal access token (optional; overrides $GITHUB_TOKEN)
+  install_dir  compress fatima-package file saving directory
+
+environment variables:
+  GITHUB_TOKEN  github.com personal access token (used when -t is not provided)
 `
 
 var (
 	targetOs   = flag.String("o", "", "target os. e.g) linux darwin")
 	targetArch = flag.String("a", "", "target arch. e.g) amd64 arm64")
-	pat        = flag.String("t", "", "github PAT")
+	pat        = flag.String("t", "", "github PAT (overrides $GITHUB_TOKEN)")
 	outputDir  string
 )
 

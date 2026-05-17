@@ -26,7 +26,7 @@ package main
 import (
 	"fmt"
 	"github.com/fatima-go/fatima-package/util"
-	"gopkg.in/src-d/go-git.v4"
+	git "github.com/go-git/go-git/v5"
 	"net/url"
 	"path/filepath"
 )

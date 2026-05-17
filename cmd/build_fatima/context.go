@@ -112,6 +112,13 @@ func (j *JobContext) Close() {
 	os.RemoveAll(filepath.Dir(j.packageFilesDir))
 }
 
+func resolveSourceUrlToken() string {
+	if pat != nil && *pat != "" {
+		return *pat
+	}
+	return os.Getenv("GITHUB_TOKEN")
+}
+
 func createJobContext(target supportBuild) (*JobContext, error) {
 	var err error
 	ctx := &JobContext{}
@@ -125,7 +132,7 @@ func createJobContext(target supportBuild) (*JobContext, error) {
 		return ctx, fmt.Errorf("fail to create temp dir : %s", err.Error())
 	}
 
-	ctx.sourceUrlToken = *pat //"MUST_BE_PROVIDED_AS_ARG" // TODO
+	ctx.sourceUrlToken = resolveSourceUrlToken()
 	ctx.tempDir = tmpdir
 	ctx.packageFilesDir = filepath.Join(tmpdir, fatimaPackageDirName)
 	ctx.target = target
