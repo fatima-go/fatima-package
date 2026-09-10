@@ -10,6 +10,7 @@ import termios
 import time
 
 import pyte
+from wcwidth import wcwidth
 
 
 class Terminal:
@@ -34,7 +35,18 @@ class Terminal:
             self.stream.feed(value)
 
     def text(self):
-        return "\n".join(self.screen.display)
+        # Incremental redraws can leave an orphaned second cell of a wide
+        # character in pyte. Render that cell as blank instead of indexing an
+        # empty string in Screen.display; keep the actual terminal cell widths.
+        lines = []
+        for y in range(self.screen.lines):
+            cells, x = [], 0
+            while x < self.screen.columns:
+                value = self.screen.buffer[y][x].data or " "
+                cells.append(value)
+                x += max(1, wcwidth(value[0]))
+            lines.append("".join(cells))
+        return "\n".join(lines)
 
     def wait(self, text, timeout=30):
         until = time.monotonic() + timeout

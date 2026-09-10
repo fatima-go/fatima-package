@@ -32,6 +32,9 @@ rostart -p linux01:default ctlprobe
 roproc -p linux01:default
 ```
 
+`rodis`는 기존 HTTP 표를 한 번 출력한다. 나머지 운영 TUI의 목록·상세 배치와
+키 조작은 [운영 명령 문서](grpc-operations.md#목록과-상세-표)에 정리한다.
+
 테스트 FAR에는 `darwin_arm64`, `linux_arm64`, `linux_amd64` 실행 파일이 들어 있다.
 
 ```sh
@@ -98,7 +101,8 @@ OPM 바이너리를 일시 교체하고 `finally`에서 신규 버전으로 복�
 | 연속 상태 조회, 실제 Linux PID 대조 | 통과 |
 | 클라이언트 종료 후 작업 완료/재조회 | 통과 |
 | Juno 강제 종료 후 INTERRUPTED 보존, 자동 재실행 금지 | 통과 |
-| 여섯 TUI, 결과 Enter 재실행 방지, rodis 재연결 | 통과 |
+| 최초 전환 시 여섯 TUI, 결과 Enter 재실행 방지, rodis 재연결 | 통과 |
+| 화면 개선 후 rodis HTTP 표, 운영 목록/상세 표, 검색·60×19 전환, 실행 확인 | 통과 |
 | 구 CLI → 신 서버 및 구/신 Jupiter·Juno 혼합 네 조합 | 통과 |
 | 다중 플랫폼 FAR 전체 업로드 및 Linux arm64 실행 파일 해시 일치 | 통과 |
 | 세 Juno에 업로드 한 번, 첫 배포 대기, 나머지 순차 배포, 재배포 goaway | 통과 |

@@ -44,8 +44,8 @@ github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f h1:Y/CXytFA4m6
 github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f/go.mod h1:vw97MGsxSvLiUE2X8qFplwetxpGLQrlU1Q9AUEIzCaM=
 github.com/fatih/color v1.19.0 h1:Zp3PiM21/9Ld6FzSKyL5c/BULoe/ONr9KlbYVOfG8+w=
 github.com/fatih/color v1.19.0/go.mod h1:zNk67I0ZUT1bEGsSGyCZYZNrHuTkJJB+r6Q9VuMi0LE=
-github.com/fatima-go/fatima-cmd v0.0.0-20260910061712-95d991dfd276 h1:mTbur8/aa6li2Vn9Ckjw2hLkNrv9a5MmecCOJkAPUuQ=
-github.com/fatima-go/fatima-cmd v0.0.0-20260910061712-95d991dfd276/go.mod h1:+UubwyPBn6kQGar4hRZ27R+2DQ3dp6/USaPOOsDnvVc=
+github.com/fatima-go/fatima-cmd v0.0.0-20260910084217-e7b195bdf7f5 h1:zRYO9SGm2twPFIL3ejUXHGYCi7f7LxTZ6p3xxMC0sUQ=
+github.com/fatima-go/fatima-cmd v0.0.0-20260910084217-e7b195bdf7f5/go.mod h1:+UubwyPBn6kQGar4hRZ27R+2DQ3dp6/USaPOOsDnvVc=
 github.com/fatima-go/fatima-core v1.3.5-0.20260910061322-807ccde3ecfa h1:+QfHdzAOd/ggOVbnBt+X+hA4F/Qflhmi6uE4+TQgNXg=
 github.com/fatima-go/fatima-core v1.3.5-0.20260910061322-807ccde3ecfa/go.mod h1:h8LHgZJBhbDXQ71KTvjNPaeoOILeCxqDP9Ku5ydpYAI=
 github.com/fatima-go/juno v0.0.0-20260910061710-f8a53f2c2716 h1:IhfeBxtn5dQjB8TurCog+1B2TRtTF89GTxYH4my/Mig=

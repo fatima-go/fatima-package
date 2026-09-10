@@ -89,7 +89,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     lab.local_guard()
     assert "aarch64" in lab.inside("uname", "-m")
-    initial = query("rodis")
+    assert "linux_arm64" in cli("rodis", "-p", lab.TARGET).stdout
+    initial = query("roproc")["catalog"]
     assert initial["platform"] == "linux_arm64"
     assert all(live(p) for p in ("jupiter", "juno", "saturn"))
     packages = json.loads(cli("ropack", "--json").stdout)["packages"]
@@ -125,12 +126,12 @@ def main():
     assert operation("rostop", "ctlprobe", "stop") == stopped
     # Linux metrics are sampled asynchronously by the existing monitor. The
     # operation above already proved actual PID exit; await its next snapshot.
-    eventually(lambda: next(p for p in query("rodis")["processes"] if p["name"] == "ctlprobe")["state"] == "DEAD")
+    eventually(lambda: next(p for p in query("roproc")["catalog"]["processes"] if p["name"] == "ctlprobe")["state"] == "DEAD")
     started = operation("rostart", "ctlprobe", "start")
     assert live("ctlprobe") and live("ctlprobe") != pid
     assert "readiness" in started["events"][-2]["message"] or any("readiness" in e["message"] for e in started["events"])
     for _ in range(20):
-        report = query("rodis")
+        report = query("roproc")["catalog"]
         by_name = {p["name"]: p for p in report["processes"]}
         assert len(by_name) == len(report["processes"]) == 5
         for name in ("jupiter", "juno", "saturn", "ctlprobe"):
@@ -200,10 +201,11 @@ def main():
     check("Juno restart preserves results, marks interrupted operation and does not replay")
 
     # Execute the shipped Linux CLI as well as the native Mac CLI.
-    for name, args in (("ropack", []), ("rodis", ["-p", lab.TARGET]), ("rocron", ["-p", lab.TARGET]), ("roproc", ["-p", lab.TARGET])):
+    for name, args in (("ropack", []), ("rocron", ["-p", lab.TARGET]), ("roproc", ["-p", lab.TARGET])):
         json.loads(lab.inside(name, "--json", *args))
     json.loads(lab.inside("rostop", "--json", "-p", lab.TARGET, "--request-id", RUN + "-linux-stop", "ctlprobe"))
     json.loads(lab.inside("rostart", "--json", "-p", lab.TARGET, "--request-id", RUN + "-linux-start", "ctlprobe"))
+    assert "linux_arm64" in lab.inside("rodis", "-p", lab.TARGET)
     assert live("ctlprobe")
     check("all six shipped Linux arm64 CLI binaries run against real Linux OPM")
 

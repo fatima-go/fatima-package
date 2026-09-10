@@ -69,34 +69,28 @@ FAILED와 exit 1을 반환하고, 요청 ID로 실패 결과를 다시 조회할
 
 ```sh
 rodis -p local01:default
-rodis --plain -p local01:default -s name
-rodis --json -p local01:default
+rodis -p local01:default -s name
+rodis -p local01:default -s index
 ```
 
-TUI는 gRPC 상태 스트림으로 갱신한다. Juno가 기존 상태 측정 기능으로 매초 스냅샷을
-만들며, 최초 구독과 매분 권한을 확인한다. Enter는 상세 정보만 연다. `/`로 이름·그룹·
-상태 검색, `o`로 이름/등록 순서 정렬을 전환한다. 갱신 중 선택한 프로세스를 유지한다.
-`s` 기동, `x` 중단은 별도 대상 확인 화면을 거친다. 완료 후 `n`으로 상태 화면에 복귀한다.
-서버가 해당 제어 기능을 지원하지 않거나 현재 상태 구독에 오류가 있으면 바로 실행하지 않는다.
-연결이 끊기면 마지막 자료와 재연결 안내가 남으며 `r`로 구독을 다시 연다.
-`--plain`은 기존 주요 표/요약 항목을 한 번 출력하며 `-s name|index`를 지원한다.
+`rodis`는 기존 HTTP 구현과 표 출력을 그대로 사용한다. 서버가 신규 gRPC 기능을
+지원해도 capability 조회나 gRPC 연결을 시도하지 않으며, TUI를 열지 않는다.
+원래의 `-p`, `-s`, `-d` 옵션을 사용한다. `--plain`, `--json`, `--tui`, `--legacy`는
+이 명령의 옵션이 아니다.
 
-로컬 Mac에서 검색 → 상세 → 중단 확인 → DEAD 갱신 → 기동 확인 → ALIVE 갱신을
-실제 `ctlprobe`로 검증했다. 60×19 화면과 구버전 `rodis`의 HTTP 조회도 확인했다.
-macOS 신규 조회는 고정된 결과 슬롯과 최대 8개의 동시 수집으로 프로세스 누락을
-방지한다. 기존 HTTP용 Darwin 수집 코드는 변경하지 않았다.
-신규 기동/중단/배포의 macOS PID 관측은 커널 sysctl을 직접 사용한다. 기존 Juno의
-SIGCHLD 수거와 `ps` 명령 대기가 충돌해 살아 있는 프로세스를 DEAD로 판정하는
-경쟁 조건을 신규 경로에서 피한다.
-보완 후 실제 Mac에서 40회 연속 조회의 전체 목록·ALIVE 상태와 중단/기동을 확인했다.
+프로세스 제어 명령에서 필요한 서버의 신규 상태 API는 유지한다. macOS 신규 상태
+조회는 고정 결과 슬롯과 최대 8개의 동시 수집으로 프로세스 누락을 방지한다.
+신규 기동/중단/배포의 macOS PID 관측은 커널 sysctl을 직접 사용한다.
 Linux 신규 조회도 등록 설정에서 이름/그룹을 즉시 반영한다. 첫 모니터 측정 전에는
 `UNKNOWN`을 표시하며, `roproc` 등록 직후 `rostart` 대상을 선택할 수 있다.
+기존 HTTP 상태 수집과 서버 API 계약은 바꾸지 않는다.
 
 ## ropack
 
 `ropack`은 Jupiter의 패키지 목록/상태 스트림을 구독한다. `-g`는 패키지 그룹,
 `-p`는 패키지 필터다. `/`로 그룹·패키지·플랫폼·상태를 검색한다. Enter는 상세,
-`s`는 같은 설치 디렉터리의 `rodis`를 열며 종료하면 패키지 화면으로 돌아온다.
+`s`는 같은 설치 디렉터리의 기존 HTTP `rodis` 표를 연다. 출력을 확인하고 Enter를
+누르면 패키지 화면으로 돌아온다.
 등록·확인 시간은 로컬 시간대다. `--plain`/`--json`은 한 번 조회한다.
 
 Jupiter는 등록 자료의 복사본을 조회하고 기존 저장소를 변경하지 않는다. 조회자는
@@ -141,17 +135,33 @@ INTERRUPTED로 남고 자동 재실행하지 않는다.
 삭제 경로의 정리·등록 제거까지 검증했다. OPM 삭제 차단, 설정 변경 충돌, 요청 중복,
 MONITOR 실행 거부, 결과 스트림 재접속, 저장 실패도 테스트했다.
 
+## 목록과 상세 표
+
+`rostop`, `rostart`, `roproc`의 목록은 `PROCESS / GROUP / STATE` 열을 갖는다.
+선택한 프로세스의 PID, 시작 시간, CPU, 메모리, FD, 스레드, IC와 등록 순서를 우측
+상세 표에 표시한다. `ropack`도 `PACKAGE / GROUP / STATE` 목록과 주소·플랫폼·등록/확인
+시간을 포함한 상세 표를 제공한다. Enter로 패키지 상세를 넓게 볼 수 있다.
+
+목록은 화면 높이만큼 표시하며 ↑↓, PgUp/PgDn, Home/End로 이동한다. `/`는 이름·그룹·
+상태 검색, `Tab`은 목록/상세 전환이다. 상세에서는 ↑↓와 페이지 키로 긴 내용을
+스크롤한다. 복수 선택은 상세를 보거나 돌아와도 유지된다. `rostop`/`rostart`의
+Enter는 실행 확인 화면을 먼저 열고, `roproc`의 `x`도 삭제 미리보기를 먼저 연다.
+
+100열 이상에서는 목록과 상세를 좌우로 배치한다. 좁고 높은 화면은 위아래로 배치하고,
+좁고 낮은 화면은 `Tab`으로 목록/상세를 전환한다. 최소 크기는 60×19다.
+
 ## 전체 검증과 로컬 사용
 
-전환 범위는 `rocron`, `rostop`, `rostart`, `rodis`, `ropack`, `roproc`이다.
+gRPC/TUI 전환 범위는 `rocron`, `rostop`, `rostart`, `ropack`, `roproc`이다.
+`rodis`는 기존 HTTP 표 출력을 유지한다.
 기존 `rodeploy`는 유지하며 `rolog`, `roclric`, `rohis`, `roclip`, `rocontext`,
 `roupdate`의 인터페이스는 변경하지 않는다. 사용 포트는 기존 9190/9180이다.
 
 | Jupiter | Juno | CLI | 실제 Mac 검증 |
 |---|---|---|---|
-| 신규 | 신규 | 신규 | 여섯 명령 TUI 및 gRPC 기능 |
+| 신규 | 신규 | 신규 | 다섯 명령 TUI/gRPC 및 rodis HTTP 표 |
 | 신규 | 신규 | 보관된 구버전 | 여섯 명령의 기존 HTTP 기능 |
-| 구버전 | 구버전 | 신규 | 여섯 명령의 자동 HTTP fallback |
+| 구버전 | 구버전 | 신규 | 다섯 명령의 자동 HTTP fallback 및 rodis HTTP 표 |
 | 신규 | 구버전 | 신규 | 명령별 기능 확인 후 HTTP fallback |
 | 구버전 | 신규 | 신규 | 기존 HTTP 인증/처리 경로 |
 

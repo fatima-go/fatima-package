@@ -43,7 +43,7 @@ for failing in ("jupiter", "juno"):
             time.sleep(0.5)
         else:
             raise RuntimeError("legacy Juno registration failed")
-        assert "linux01" in inside(gateway, ["rodis", "--legacy", "-p", "linux01:default"])
+        assert "linux01" in inside(gateway, ["rodis", "-p", "linux01:default"])
         endpoint = f"http://{gateway}:9190" if failing == "jupiter" else f"http://{node}:9180"
         caps = json.loads(inside(gateway, ["wget", "-qO-", endpoint + "/.well-known/fatima/capabilities"]))
         assert "unavailable" in caps["features"], caps
