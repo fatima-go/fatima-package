@@ -2,6 +2,9 @@
 fatima-package is fatima running environment and facilities<br>
 this project build fatima-package
 
+형제 프로젝트의 현재 작업 파일로 빌드·설치하는 신규 개발 경로는
+[신규 배포 기능 사용 및 검증](docs/progressive-deploy-usage.md)을 참고한다.
+
 ```shell
 // example running
 

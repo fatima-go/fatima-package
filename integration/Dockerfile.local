@@ -1,0 +1,7 @@
+FROM alpine:3.22
+RUN apk add --no-cache bash procps lsof tzdata
+COPY fatima-package.linux-arm64.tar.gz /tmp/package.tar.gz
+RUN mkdir /fatima && tar -xzf /tmp/package.tar.gz -C /fatima --strip-components=1 && rm /tmp/package.tar.gz
+ENV FATIMA_HOME=/fatima
+ENV PATH=/fatima/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:.
+WORKDIR /fatima

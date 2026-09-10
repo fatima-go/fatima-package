@@ -3,3 +3,5 @@
 .idea
 go.sum
 cmd/build_fatima/build_fatima
+.local/
+__pycache__/
