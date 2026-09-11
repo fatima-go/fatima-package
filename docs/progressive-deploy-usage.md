@@ -35,7 +35,8 @@ rodeploy upload /absolute/path/example.far
 rodeploy /absolute/path/example.far
 ```
 
-1. `u`: 로컬 FAR 목록에서 선택하고 내용을 확인한 뒤 `Enter`로 업로드한다.
+1. Upload(기본 화면, 다른 화면에서는 `u`): 로컬 FAR 목록에서 선택하고 내용을 확인한 뒤 `Enter`로 업로드한다.
+   이미 업로드한 artifact로 배포하려면 업로드하지 않고 `a`로 Artifact 목록에 들어간다.
    gofar와 동일하게 **첫 번째 GOPATH의 `far/<process>/*.far`**를 읽어 파일 수정 시각이
    최근인 순서로 표시한다. 같은 이름으로 다시 빌드한 파일도 최신순으로 정렬한다.
    `p`로 경로를 직접 입력할 수 있고 `r`로 목록을 갱신한다. 경로 입력 중 `Enter`는
@@ -54,7 +55,7 @@ rodeploy /absolute/path/example.far
 모든 화면은 C안의 공통 구조를 사용한다. 상단은 rocontext 이름·주소와 현재 단계,
 왼쪽은 Upload부터 Remaining까지의 단계 목록, 오른쪽은 선택 목록과 상세 패널,
 하단은 상태와 단축키다. 정상 흐름에는 Connection 단계를 표시하지 않는다.
-기본 실행은 업로드된 artifact 목록을 열며 `u`로 Upload 화면에 들어간다.
+기본 실행은 Upload 화면(로컬 FAR 목록)을 열며, 업로드 없이 기존 artifact로 배포하려면 `a`로 Artifact 목록에 들어간다.
 `Tab`은 목록/상세 영역 전환, `↑↓`는 해당 영역의 선택/스크롤, `PgUp/PgDn`은 상세 스크롤이다.
 로컬 FAR와 서버 artifact 목록은 한 번에 최대 5개를 표시한다. `↑↓`로 더 오래된 항목까지
 이동할 수 있고, 목록 제목에는 현재 표시 범위와 전체 개수(예: `1–5 / 35`)가 나온다.
