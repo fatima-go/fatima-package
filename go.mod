@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/fatima-go/fatima-cmd v0.0.0-20260910084217-e7b195bdf7f5
-	github.com/fatima-go/fatima-core v1.3.5-0.20260910061322-807ccde3ecfa
+	github.com/fatima-go/fatima-core v1.3.5
 	github.com/fatima-go/juno v0.0.0-20260910061710-f8a53f2c2716
 	github.com/fatima-go/jupiter v0.0.0-20260910061707-c5dd10ad7c64
 	github.com/go-git/go-git/v5 v5.16.5
