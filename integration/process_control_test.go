@@ -3,7 +3,7 @@ package integration
 import (
 	"context"
 	"github.com/fatima-go/fatima-cmd/controlui"
-	"github.com/fatima-go/fatima-core/opm/operations"
+	"github.com/fatima-go/fatima-opm/operations"
 	"testing"
 	"time"
 )

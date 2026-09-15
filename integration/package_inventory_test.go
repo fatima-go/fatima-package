@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/fatima-go/fatima-cmd/controlui"
-	"github.com/fatima-go/fatima-core/opm/api"
+	"github.com/fatima-go/fatima-opm/api"
 )
 
 func TestPackageInventoryMixedPeers(t *testing.T) {

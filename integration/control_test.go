@@ -6,9 +6,9 @@ import (
 	"github.com/fatima-go/fatima-cmd/cipher"
 	"github.com/fatima-go/fatima-cmd/config"
 	"github.com/fatima-go/fatima-cmd/controlui"
-	"github.com/fatima-go/fatima-core/opm/api"
-	"github.com/fatima-go/fatima-core/opm/operations"
-	"github.com/fatima-go/fatima-core/opm/transport"
+	"github.com/fatima-go/fatima-opm/api"
+	"github.com/fatima-go/fatima-opm/operations"
+	"github.com/fatima-go/fatima-opm/transport"
 	control "github.com/fatima-go/juno/control"
 	jupiter "github.com/fatima-go/jupiter/deployment"
 	"google.golang.org/grpc"
@@ -53,7 +53,7 @@ func newControlLab(t *testing.T) *controlLab {
 	s, err := control.New(t.TempDir(), "host:default", func(ctx context.Context, role string) error {
 		_, e := api.NewIdentityClient(c).Validate(transport.WithToken(ctx, transport.Token(ctx)), &api.ValidateRequest{Role: role})
 		return e
-	})
+	}, func(context.Context) error { return nil })
 	if err != nil {
 		t.Fatal(err)
 	}

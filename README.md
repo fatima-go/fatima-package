@@ -66,3 +66,24 @@ brew install gnu-tar
 COPYFILE_DISABLE=1 
 ```
 따라서 더 이상 "._" 파일은 생기진 않지만 압축 풀때 경고 문구는 나오기에 무시하도록 한다.
+
+## Core v2 / standalone OPM build
+
+- Runtime: `github.com/fatima-go/fatima-core/v2 v2.0.0`
+- Operations: `github.com/fatima-go/fatima-opm v1.0.0`
+- Juno, Jupiter and CLI revisions are pinned in go.mod. Production module builds do not require local replace directives.
+- Local source builds use `go.work.dev` and include the sibling `fatima-opm` repository. Saturn remains on core v1; separate executables may use different runtime major versions.
+
+```sh
+./scripts/test-local.sh
+python3 scripts/verify-module-compatibility.py
+python3 scripts/build-local.py --os linux --arch arm64 --output .local/module-split
+```
+
+The compatibility script downloads pinned released modules, starts only temporary local processes, verifies new Juno Goaway/IPC against core v1.3.4/v1.3.7 IPC services, and checks old/new OPM gRPC schema interoperability in both directions. It uses minimal runtime environment fixtures; it is not a full application deployment test. It does not alter an installed Fatima environment or user context.
+
+### Migration verification
+
+Runtime IPC and HTTP/gRPC service names remain unchanged. Old/new protobuf packages must never be linked into the same executable. Check dependency closure, not only direct imports. Existing deployment journals retain their JSON shape and location; restart/cancellation coverage is provided by Jupiter/Juno and CLI integration suites.
+
+Core's existing environment-dependent IPC unit test failure is tracked in its release notes. Docker runtime smoke tests require an available Docker daemon and are separate from successful cross-platform package builds.

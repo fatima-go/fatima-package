@@ -3,10 +3,10 @@ module github.com/fatima-go/fatima-package
 go 1.25.0
 
 require (
-	github.com/fatima-go/fatima-cmd v0.0.0-20260910084217-e7b195bdf7f5
-	github.com/fatima-go/fatima-core v1.3.6
-	github.com/fatima-go/juno v0.0.0-20260910061710-f8a53f2c2716
-	github.com/fatima-go/jupiter v0.0.0-20260910061707-c5dd10ad7c64
+	github.com/fatima-go/fatima-cmd v0.0.0-20260915054309-c1081432b82b
+	github.com/fatima-go/fatima-opm v1.0.0
+	github.com/fatima-go/juno v0.0.0-20260915054052-1fad0a2f7447
+	github.com/fatima-go/jupiter v0.0.0-20260915054128-f79f86b3266a
 	github.com/go-git/go-git/v5 v5.16.5
 	github.com/gosuri/uiprogress v0.0.1
 	google.golang.org/grpc v1.81.1

@@ -13,7 +13,7 @@ import tempfile
 from datetime import datetime
 
 PACKAGE = Path(__file__).resolve().parents[1]
-SOURCES = ("fatima-core", "fatima-log", "fatima-cmd", "jupiter", "juno", "saturn", "gofar")
+SOURCES = ("fatima-core", "fatima-opm", "fatima-log", "fatima-cmd", "jupiter", "juno", "saturn", "gofar")
 COMMANDS = "lcslack lcproc lccrypto rocontext roupdate roclip rocron rodeploy roclric rohis rodis rolog ropack roproc lcps rostart rostop lcha startro stopro".split()
 
 
